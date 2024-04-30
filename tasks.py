@@ -2,7 +2,7 @@ import cmd
 import typer
 from rich.console import Console
 from rich.table import Table
-from models.database import complete_task, delete_tasks, get_all_tasks, insert_Tache, update_tasks, login_user, inscription, assign_tasks
+from models.database import complete_task, delete_tasks, get_user_tasks,get_all_tasks, insert_Tache, update_tasks, login_user, inscription, assign_tasks
 from models.taskModel import Todo
 
 console = Console()
@@ -27,11 +27,14 @@ class TacheCMD(cmd.Cmd):
         return True
     
     @app.command(short_help='Ajouter une tâche')
-    def add(self, task: str, category: str):
+    def do_add(self, arg):
+        task = input("Entrez le titre de la tâche:\n")
+        category = input("Entrez la description de la tâche:\n")
+
         typer.echo(f"ajout de la tâche {task}, {category}") 
-        todo = Todo(task,category)
+        todo = Todo(task=task, category=category, id_User=self.user[0])
         insert_Tache(todo)
-        self.show()
+        self.do_show(None)
 
     @app.command(short_help='Supprimer une tâche')
     def do_delete(self, arg, position: int):
@@ -42,21 +45,21 @@ class TacheCMD(cmd.Cmd):
         self.show()
 
     @app.command(short_help='Modifier une tâche')
-    def update(self, position: int, task: str = None , category: str = None):
+    def do_update(self, arg, position: int, task: str = None , category: str = None):
         typer.echo(f"Mise à jour {position}")
 
         update_tasks(position-1, task, category)
         self.show()
 
     @app.command(short_help='Completer une tâche')
-    def complete(self, position: int):
+    def do_complete(self, arg, position: int):
         typer.echo(f"Validation {position}")
 
         complete_task(position-1)
         self.show()
 
     @app.command(short_help='Assigner une tâche')
-    def assign_task(self,position: int):
+    def do_assign_task(self, arg, position: int):
         typer.echo(f"Assignation {position}")
 
         assign_tasks(position-1)
@@ -65,7 +68,8 @@ class TacheCMD(cmd.Cmd):
     @app.command(short_help='Affichage')
     def do_show(self, arg):
         """Affichage"""
-        tasks = get_all_tasks()
+        user =self.user
+        tasks = get_user_tasks(user[0])
         console.print("[bold magenta]Todos[/bold magenta]!","🌍")
 
         table = Table(show_header=True, header_style="bold blue")

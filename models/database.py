@@ -123,4 +123,8 @@ def inscription():
 def get_user_tasks(user_id):
     cursor.execute("SELECT * FROM Taches WHERE id_User=?", (user_id,))
     tasks = cursor.fetchall()
-    return tasks
+    taches = []
+    for resultat in tasks:
+        taches.append(Todo(*resultat))
+    return taches
+    
