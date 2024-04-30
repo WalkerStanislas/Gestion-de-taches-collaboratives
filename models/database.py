@@ -2,7 +2,7 @@
 import sqlite3
 from typing import List
 import datetime
-from taskModel import Todo
+from models.taskModel import Todo
 import hashlib
 
 conn = sqlite3.connect('GestionTaches.db') # Création de la base de données nommée  GestionTaches
@@ -117,13 +117,10 @@ def inscription():
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     cursor.execute("INSERT INTO User (nomUser, passe) VALUES (?, ?)", (username, hashed_password))
     conn.commit()
-    print("Inscription réussie.")
+    #print("Inscription réussie.")
 
 # Récupérer les tâches de l'utilisateur
 def get_user_tasks(user_id):
     cursor.execute("SELECT * FROM Taches WHERE id_User=?", (user_id,))
     tasks = cursor.fetchall()
     return tasks
-
-
-
