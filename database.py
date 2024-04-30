@@ -88,6 +88,11 @@ def update_tasks(position: int, task: str, category: str):
             
 def complete_task(position: int):
     with conn:
+        cursor.execute('UPDATE Taches SET status = 3, date_completed = :date_completed WHERE position = :position',
+                       {'position':position, 'date_completed':datetime.datetime.now().isoformat()})
+        
+def assign_tasks(position: int):
+    with conn:
         cursor.execute('UPDATE Taches SET status = 2, date_completed = :date_completed WHERE position = :position',
                        {'position':position, 'date_completed':datetime.datetime.now().isoformat()})
         

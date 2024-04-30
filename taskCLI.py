@@ -1,7 +1,7 @@
 import typer
 from rich.console import Console
 from rich.table import Table
-from database import complete_task, delete_tasks, get_all_tasks, insert_Tache, update_tasks, login_user, inscription
+from database import complete_task, delete_tasks, get_all_tasks, insert_Tache, update_tasks, login_user, inscription, assign_tasks
 from taskModel import Todo
 
 console = Console()
@@ -52,6 +52,13 @@ def complete(position: int):
     complete_task(position-1)
     show()
 
+@app.command(short_help='Assigner une tâche')
+def assign_task(position: int):
+    typer.echo(f"Assignation {position}")
+
+    assign_tasks(position-1)
+    show()
+
 @app.command(short_help='Affichage')
 def show():
     tasks = get_all_tasks()
@@ -71,7 +78,12 @@ def show():
 
     for idx, task in enumerate(tasks,start=1):
         c= get_category_color(task.category)
-        is_done_str = '✔️' if task.status==2 else '❌'
+        if task.status == 2:
+            is_done_str = '⏳'
+        elif task.status == 3:
+            is_done_str ='✔️'
+        else:
+            is_done_str ='❌' 
         table.add_row(str(idx),task.task, f"[{c}]{task.category}[/{c}]",is_done_str)
     console.print(table)
 
