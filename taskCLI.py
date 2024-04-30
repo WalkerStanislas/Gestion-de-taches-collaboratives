@@ -1,8 +1,8 @@
 import typer
 from rich.console import Console
 from rich.table import Table
-from database import complete_task, delete_tasks, get_all_tasks, insert_Tache, update_tasks, login_user, inscription
-from taskModel import Todo
+from models.database import complete_task, delete_tasks, get_all_tasks, insert_Tache, update_tasks, login_user, inscription
+from models.taskModel import Todo
 
 console = Console()
 
