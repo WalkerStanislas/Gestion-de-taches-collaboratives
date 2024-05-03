@@ -77,10 +77,10 @@ def change_position(old_position: int, new_position: int, commit = True):
 def update_tasks(position: int, task: str, category: str):
     with conn:
         if task is not None and category is not None:
-            cursor.execute('UPDATE Taches SET task = : task, category = :category WHERE position = :position',
+            cursor.execute('UPDATE Taches SET task = :task, category = :category WHERE position = :position',
                            {'position':position, 'task':task, 'category':category})
         elif task is not None:
-            cursor.execute('UPDATE Taches SET task = : task WHERE position = :position',
+            cursor.execute('UPDATE Taches SET task = :task WHERE position = :position',
                            {'position':position, 'task':task})
         elif category is not None:
             cursor.execute('UPDATE Taches SET category = :category WHERE position = :position',
