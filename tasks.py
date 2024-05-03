@@ -50,7 +50,7 @@ class TacheCMD(cmd.Cmd):
         """Mise à jour d'une tâche"""
         position = int(input("Entrer la position de la tâche sur la table:"))
 
-        
+
         task = str(input("Entrer le libelle de la nouvelle tâche:"))
         category = str(input("Entrer la description de la nouvelle tâche:"))
         typer.echo(f"Mise à jour {position}")
@@ -70,7 +70,7 @@ class TacheCMD(cmd.Cmd):
             complete_task(position-1)
             self.do_show(None)
         else:   #Un utilisateur standard ne peut completer une tâche lui même
-            console.print("Vous n'êtes pas autoriser à éffectuer cette tâche")
+            console.print("🚨","[bold red]Vous n'êtes pas autoriser à éffectuer cette opération")
 
         
 
