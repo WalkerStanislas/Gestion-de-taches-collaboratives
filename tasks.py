@@ -37,40 +37,56 @@ class TacheCMD(cmd.Cmd):
         self.do_show(None)
 
     @app.command(short_help='Supprimer une tâche')
-    def do_delete(self, arg, position: int):
+    def do_delete(self, arg):
         """Suppression"""
+        position = int(input("Entrer la position de la tâche sur la table:"))
         typer.echo(f"supression {position}")
 
         delete_tasks(position-1) # Position commence à 1 mais la base de données, elle commence à 0
-        self.show()
+        self.do_show(None)
 
     @app.command(short_help='Modifier une tâche')
-    def do_update(self, arg, position: int, task: str = None , category: str = None):
+    def do_update(self, arg):
+        """Mise à jour d'une tâche"""
+        position = int(input("Entrer la position de la tâche sur la table:"))
+
+        
+        task = str(input("Entrer le libelle de la nouvelle tâche:"))
+        category = str(input("Entrer la description de la nouvelle tâche:"))
         typer.echo(f"Mise à jour {position}")
 
         update_tasks(position-1, task, category)
-        self.show()
+        self.do_show(None)
 
     @app.command(short_help='Completer une tâche')
-    def do_complete(self, arg, position: int):
-        typer.echo(f"Validation {position}")
+    def do_complete(self, arg):
+        """Completer une tâche"""
 
-        complete_task(position-1)
-        self.show()
+        user =self.user
+
+        if user[6] == "3":   #role d'administrateur égale à 3. Il a la possibilité de completer les tâches
+            position = int(input("Entrer la position de la tâche sur la table:"))
+            typer.echo(f"Validation {position}")
+            complete_task(position-1)
+            self.do_show(None)
+        else:   #Un utilisateur standard ne peut completer une tâche lui même
+            console.print("Vous n'êtes pas autoriser à éffectuer cette tâche")
+
+        
 
     @app.command(short_help='Assigner une tâche')
     def do_assign_task(self, arg, position: int):
         typer.echo(f"Assignation {position}")
 
         assign_tasks(position-1)
-        self.show()
+        self.do_show(None)
 
     @app.command(short_help='Affichage')
     def do_show(self, arg):
         """Affichage"""
         user =self.user
 
-        if user[6] == 3:   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
+        if user[6] == "3":   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
             tasks = get_all_tasks()
         else:   #Chaque utilisateur ne verra que les tâches qu'il a crée
             tasks = get_user_tasks(user[0])
