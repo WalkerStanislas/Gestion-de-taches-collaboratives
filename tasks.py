@@ -69,7 +69,12 @@ class TacheCMD(cmd.Cmd):
     def do_show(self, arg):
         """Affichage"""
         user =self.user
-        tasks = get_user_tasks(user[0])
+
+        if user[6] == 3:   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
+            tasks = get_all_tasks()
+        else:   #Chaque utilisateur ne verra que les tâches qu'il a crée
+            tasks = get_user_tasks(user[0])
+
         console.print("[bold magenta]Todos[/bold magenta]!","🌍")
 
         table = Table(show_header=True, header_style="bold blue")
