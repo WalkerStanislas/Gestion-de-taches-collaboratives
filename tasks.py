@@ -3,6 +3,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 from models.database import complete_task, delete_tasks, get_user_tasks,get_all_tasks, insert_Tache, update_tasks, login_user, inscription, assign_tasks
+from models.database import get_task_by_position
 from models.taskModel import Todo
 
 console = Console()
@@ -49,8 +50,8 @@ class TacheCMD(cmd.Cmd):
     def do_update(self, arg):
         """Mise à jour d'une tâche"""
         position = int(input("Entrer la position de la tâche sur la table:"))
-
-
+        tache = get_task_by_position(position=position-1)
+        print(tache)
         task = str(input("Entrer le libelle de la nouvelle tâche:"))
         category = str(input("Entrer la description de la nouvelle tâche:"))
         typer.echo(f"Mise à jour {position}")
@@ -64,7 +65,7 @@ class TacheCMD(cmd.Cmd):
 
         user =self.user
 
-        if user[6] == "3":   #role d'administrateur égale à 3. Il a la possibilité de completer les tâches
+        if user[6] == 3:   #role d'administrateur égale à 3. Il a la possibilité de completer les tâches
             position = int(input("Entrer la position de la tâche sur la table:"))
             typer.echo(f"Validation {position}")
             complete_task(position-1)
@@ -86,7 +87,7 @@ class TacheCMD(cmd.Cmd):
         """Affichage"""
         user =self.user
 
-        if user[6] == "3":   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
+        if user[6] == 3:   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
             tasks = get_all_tasks()
         else:   #Chaque utilisateur ne verra que les tâches qu'il a crée
             tasks = get_user_tasks(user[0])

@@ -11,14 +11,14 @@ cursor  = conn.cursor()
 def create_userTable(): #Création d'une table pour les utilisateurs
      cursor.execute(
         """
-        CREATE TABLE IF NOT EXISTS User (
-            id_User INTEGER PRIMARY KEY,
+        CREATE TABLE IF NOT EXISTS users (
+            user_id INTEGER PRIMARY KEY,
             nom VARCHAR(250),
             prenom VARCHAR(250),
-            nomUser VARCHAR(250),
-            email VARCHAR(250),
+            nomUser VARCHAR(250) UNIQUE,
+            email VARCHAR(250) UNIQUE,
             passe VARCHAR(250),
-            role VARCHAR(50)
+            role INTEGER
         )""" )
      
 create_userTable()
@@ -27,30 +27,31 @@ create_userTable()
 
 def create_task_table(): # Création d'une table pour les taches avec  06 colonnes
     cursor.execute(
-        """CREATE TABLE IF NOT EXISTS Taches (
+        """CREATE TABLE IF NOT EXISTS taches (
+        tache_id INTEGER PRIMARY KEY,
         task text,
         category text,
         date_added text,
         date_completed text,
         status integer,
         position integer,
-        id_User INTEGER,
-        FOREIGN KEY (id_User) REFERENCES User(id_User)
+        user_id INTEGER,
+        FOREIGN KEY (user_id) REFERENCES users(user_id)
         )""" )
 
 create_task_table()
 
 def insert_Tache(tache: Todo): # Opération d'insertion de tâche
-    cursor.execute('SELECT COUNT(*) FROM Taches')
+    cursor.execute('SELECT COUNT(*) FROM taches')
     count = cursor.fetchone()[0]
     tache.position = count if count else 0
     with conn:
-        cursor.execute('INSERT INTO Taches VALUES (:task, :category, :date_added, :date_completed, :status, :position, :id_User)',
-                       {'task':tache.task, 'category':tache.category, 'date_added': tache.date_added, 'date_completed':tache.date_completed, 'status':tache.status,'position':tache.position, 'id_User':tache.id_User})
+        cursor.execute('INSERT INTO taches VALUES (:task, :category, :date_added, :date_completed, :status, :position, :user_id)',
+                       {'task':tache.task, 'category':tache.category, 'date_added': tache.date_added, 'date_completed':tache.date_completed, 'status':tache.status,'position':tache.position, 'user_id':tache.id_User})
 
 
 def get_all_tasks() -> List[Todo]: # Récupérer toutes les tâches (pour l'administrateur)
-    cursor.execute('SELECT * FROM Taches')
+    cursor.execute('SELECT * FROM taches')
     results = cursor.fetchall()
     taches = []
     for resultat in results:
@@ -58,17 +59,17 @@ def get_all_tasks() -> List[Todo]: # Récupérer toutes les tâches (pour l'admi
     return taches
 
 def delete_tasks(position): # Supprimer une tâche (réservé à l'administrateur)
-    cursor.execute('SELECT COUNT(*) FROM Taches')
+    cursor.execute('SELECT COUNT(*) FROM taches')
     count = cursor.fetchone()[0]
 
     with conn:
-        cursor.execute("DELETE FROM Taches WHERE position=:position", {"position": position})
+        cursor.execute("DELETE FROM taches WHERE position=:position", {"position": position})
         for pos in range(position+1, count):
             change_position(pos, pos-1, False)
 
 
 def change_position(old_position: int, new_position: int, commit = True):
-    cursor.execute('UPDATE Taches SET position = :position_new WHERE position = :position_old',
+    cursor.execute('UPDATE taches SET position = :position_new WHERE position = :position_old',
                    {'position_old': old_position, 'position_new':new_position})
     if commit:
         conn.commit
@@ -77,23 +78,23 @@ def change_position(old_position: int, new_position: int, commit = True):
 def update_tasks(position: int, task: str, category: str):
     with conn:
         if task is not None and category is not None:
-            cursor.execute('UPDATE Taches SET task = :task, category = :category WHERE position = :position',
+            cursor.execute('UPDATE taches SET task = :task, category = :category WHERE position = :position',
                            {'position':position, 'task':task, 'category':category})
         elif task is not None:
-            cursor.execute('UPDATE Taches SET task = :task WHERE position = :position',
+            cursor.execute('UPDATE taches SET task = :task WHERE position = :position',
                            {'position':position, 'task':task})
         elif category is not None:
-            cursor.execute('UPDATE Taches SET category = :category WHERE position = :position',
+            cursor.execute('UPDATE taches SET category = :category WHERE position = :position',
                            {'position':position, 'category':category})
             
 def complete_task(position: int):
     with conn:
-        cursor.execute('UPDATE Taches SET status = 3, date_completed = :date_completed WHERE position = :position',
+        cursor.execute('UPDATE taches SET status = 3, date_completed = :date_completed WHERE position = :position',
                        {'position':position, 'date_completed':datetime.datetime.now().isoformat()})
         
 def assign_tasks(position: int):
     with conn:
-        cursor.execute('UPDATE Taches SET status = 2, date_completed = :date_completed WHERE position = :position',
+        cursor.execute('UPDATE taches SET status = 2, date_completed = :date_completed WHERE position = :position',
                        {'position':position, 'date_completed':datetime.datetime.now().isoformat()})
         
 # Connexion utilisateur
@@ -101,7 +102,7 @@ def login_user():
     username = input("Nom d'utilisateur : ")
     password = input("Mot de passe : ")
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    cursor.execute("SELECT * FROM User WHERE nomUser=? AND passe=?", (username, hashed_password))
+    cursor.execute("SELECT * FROM users WHERE nomUser=? AND passe=?", (username, hashed_password))
     user = cursor.fetchone()
     if user:
         print("Connexion réussie.")
@@ -115,16 +116,26 @@ def inscription():
     username = input("Nom d'utilisateur : ")
     password = input("Mot de passe : ")
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
-    cursor.execute("INSERT INTO User (nomUser, passe) VALUES (?, ?)", (username, hashed_password))
+    cursor.execute("INSERT INTO users (nomUser, passe, role) VALUES (?, ?, ?)", (username, hashed_password, 1))
     conn.commit()
     #print("Inscription réussie.")
 
 # Récupérer les tâches de l'utilisateur
 def get_user_tasks(user_id):
-    cursor.execute("SELECT * FROM Taches WHERE id_User=?", (user_id,))
+    cursor.execute("SELECT * FROM taches WHERE user_id=?", (user_id,))
     tasks = cursor.fetchall()
     taches = []
     for resultat in tasks:
         taches.append(Todo(*resultat))
     return taches
+
+# Récupérer les tâches de l'utilisateur
+def get_task_by_position(position):
+    cursor.execute("SELECT * FROM Taches WHERE position=?", (position,))
+    resultat = cursor.fetchone()
+    if resultat:
+        tache = [Todo(*resultat)]
+        return tache
+    else:
+        return None
     
