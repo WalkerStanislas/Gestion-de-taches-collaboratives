@@ -39,11 +39,25 @@ class TacheCMD(cmd.Cmd):
     @app.command(short_help='Supprimer une tâche')
     def do_delete(self, arg):
         """Suppression"""
-        position = int(input("Entrer la position de la tâche sur la table:"))
-        typer.echo(f"supression {position}")
-
-        delete_tasks(position-1) # Position commence à 1 mais la base de données, elle commence à 0
-        self.do_show(None)
+        try:
+            position = int(input("Entrer la position de la tâche sur la table:"))
+            user =self.user
+            if user[6] == 3:   #role d'administrateur
+                taches = get_all_tasks()
+            else:
+                taches = get_user_tasks(user[0])
+            if position < len(taches):
+                tache_cur = taches[position - 1]
+                if tache_cur.status == 1:
+                    typer.echo(f"supression {position}")
+                    delete_tasks(tache_cur.position) # Position commence à 1 mais la base de données, elle commence à 0
+                    self.do_show(None)
+                else:
+                    console.print("🚨","[bold red]Tache deja debuter impossible de supprimer")
+            else:
+                console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+        except Exception:
+            console.print("🚨","[bold red]Entrez un entier")
 
     @app.command(short_help='Modifier une tâche')
     def do_update(self, arg):
@@ -74,9 +88,7 @@ class TacheCMD(cmd.Cmd):
     @app.command(short_help='Completer une tache')
     def do_complete(self, arg):
         """Completer une tâche"""
-
         user =self.user
-
         if user[6] == 3:   #role d'administrateur égale à 3. Il a la possibilité de completer les tâches
             position = int(input("Entrer la position de la tâche sur la table:"))
             typer.echo(f"Validation {position}")
@@ -88,11 +100,28 @@ class TacheCMD(cmd.Cmd):
         
 
     @app.command(short_help='Assigner une tâche')
-    def do_assign_task(self, arg, position: int):
-        typer.echo(f"Assignation {position}")
-
-        assign_tasks(position-1)
-        self.do_show(None)
+    def do_assign_task(self, arg):
+        """Cette commande permet d'assiger une tache a un utilisateur standard"""
+        try:
+            user =self.user
+            if user[6] == 3:   #role d'administrateur
+                taches = get_all_tasks()
+            else:
+                console.print("🚨","[bold red]Vous n'etes pas autorise a faire cette operation")
+                return
+            position = int(input("Entrer la position de la tâche sur la table:"))
+            if position < len(taches):
+                tache_cur = taches[position - 1]
+                if tache_cur.status == 1:
+                    typer.echo(f"Assignation {position}")
+                    assign_tasks(tache_cur.position) # Position commence à 1 mais la base de données, elle commence à 0
+                    self.do_show(None)
+                else:
+                    console.print("🚨","[bold red]Tache deja debuter impossible")
+            else:
+                console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+        except Exception:
+            console.print("🚨","[bold red]Entrez un entier")
 
     @app.command(short_help='Affichage')
     def do_show(self, arg):
