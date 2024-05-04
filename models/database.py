@@ -127,16 +127,3 @@ def get_user_tasks(user_id):
     for resultat in tasks:
         taches.append(Todo(*resultat))
     return taches
-
-# Récupérer les tâches de l'utilisateur
-def get_task_by_position(position):
-    cursor.execute("SELECT * FROM Taches WHERE position=?", (position,))
-    resultat = cursor.fetchone()
-    if resultat:
-        tache = [Todo(*resultat)]
-        return tache
-    else:
-        return None
-    
-
-    

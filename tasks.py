@@ -3,7 +3,6 @@ import typer
 from rich.console import Console
 from rich.table import Table
 from models.database import complete_task, delete_tasks, get_user_tasks,get_all_tasks, insert_Tache, update_tasks, login_user, inscription, assign_tasks
-from models.database import get_task_by_position
 from models.taskModel import Todo
 
 console = Console()
@@ -61,15 +60,9 @@ class TacheCMD(cmd.Cmd):
             update_tasks(position-1, task, category)
         else:   #Un utilisateur standard
             taches = get_user_tasks(user[0])
-            Vraiposition = (taches[position - 1])[5]
-            print(Vraiposition)
-            #update_tasks(position-1, task, category)
-            
+            tachecor = taches[position - 1] # La tache correspondant a la position courrante
+            update_tasks(tachecor.position, task, category)
 
-
-        tache = get_task_by_position(position=position-1)
-        print(tache)
-        
         typer.echo(f"Mise à jour {position}")
         self.do_show(None)
 
