@@ -28,7 +28,6 @@ create_userTable()
 def create_task_table(): # Création d'une table pour les taches avec  06 colonnes
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS taches (
-        tache_id INTEGER PRIMARY KEY,
         task text,
         category text,
         date_added text,
