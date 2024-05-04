@@ -48,25 +48,27 @@ class TacheCMD(cmd.Cmd):
     @app.command(short_help='Modifier une tâche')
     def do_update(self, arg):
         """Mise à jour d'une tâche"""
-        position = int(input("Entrer la position de la tâche sur la table:"))
-        task = str(input("Entrer le libelle de la nouvelle tâche:"))
-        category = str(input("Entrer la description de la nouvelle tâche:"))
-        
-        user =self.user
+        try:
+            position = int(input("Entrer la position de la tâche sur la table:"))
+            task = str(input("Entrer le libelle de la nouvelle tâche:"))
+            category = str(input("Entrer la description de la nouvelle tâche:"))
+            user =self.user
+            if user[6] == 3:   #role d'administrateur
+                typer.echo(f"Validation {position}")
+                update_tasks(position-1, task, category)
+            else:   #Un utilisateur standard
+                taches = get_user_tasks(user[0])
+                if type(position) is int and position < len(taches):
+                    tachecor = taches[position - 1] # La tache correspondant a la position courrante
+                    update_tasks(tachecor.position, task, category)
+                    typer.echo(f"Mise à jour {position}")
+                    self.do_show(None)
+                else:
+                    console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+        except Exception:
+            console.print("🚨","[bold red]Entrez un entier")
 
-        
-        if user[6] == 3:   #role d'administrateur
-            typer.echo(f"Validation {position}")
-            update_tasks(position-1, task, category)
-        else:   #Un utilisateur standard
-            taches = get_user_tasks(user[0])
-            tachecor = taches[position - 1] # La tache correspondant a la position courrante
-            update_tasks(tachecor.position, task, category)
-
-        typer.echo(f"Mise à jour {position}")
-        self.do_show(None)
-
-    @app.command(short_help='Completer une tâche')
+    @app.command(short_help='Completer une tache')
     def do_complete(self, arg):
         """Completer une tâche"""
 
