@@ -28,6 +28,7 @@ class TacheCMD(cmd.Cmd):
     
     @app.command(short_help='Ajouter une tâche')
     def do_add(self, arg):
+        """Ajout tache"""
         task = input("Entrez le titre de la tâche:\n")
         category = input("Entrez la description de la tâche:\n")
 
@@ -101,7 +102,7 @@ class TacheCMD(cmd.Cmd):
 
     @app.command(short_help='Assigner une tâche')
     def do_assign_task(self, arg):
-        """Cette commande permet d'assiger une tache a un utilisateur standard"""
+        """Assignation d'une tache"""
         try:
             user =self.user
             if user[6] == 3:   #role d'administrateur
