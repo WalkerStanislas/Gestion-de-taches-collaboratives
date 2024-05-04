@@ -50,21 +50,24 @@ class TacheCMD(cmd.Cmd):
         """Mise à jour d'une tâche"""
         try:
             position = int(input("Entrer la position de la tâche sur la table:"))
-            task = str(input("Entrer le libelle de la nouvelle tâche:"))
-            category = str(input("Entrer la description de la nouvelle tâche:"))
             user =self.user
             if user[6] == 3:   #role d'administrateur
-                typer.echo(f"Validation {position}")
-                update_tasks(position-1, task, category)
-            else:   #Un utilisateur standard
+                taches = get_all_tasks()
+            else:
                 taches = get_user_tasks(user[0])
-                if type(position) is int and position < len(taches):
-                    tachecor = taches[position - 1] # La tache correspondant a la position courrante
-                    update_tasks(tachecor.position, task, category)
+            if type(position) is int and position < len(taches):
+                tache_cur = taches[position - 1]
+                if tache_cur.status == 3:
+                    console.print("Tache deja complete rien a modifier")
+                else:
+                    task = str(input("Entrer le libelle de la nouvelle tâche:"))
+                    category = str(input("Entrer la description de la nouvelle tâche:"))
+                    update_tasks(tache_cur.position, task, category)
                     typer.echo(f"Mise à jour {position}")
                     self.do_show(None)
-                else:
-                    console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+
+            else:
+                console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
         except Exception:
             console.print("🚨","[bold red]Entrez un entier")
 
