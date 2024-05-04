@@ -50,13 +50,27 @@ class TacheCMD(cmd.Cmd):
     def do_update(self, arg):
         """Mise à jour d'une tâche"""
         position = int(input("Entrer la position de la tâche sur la table:"))
-        tache = get_task_by_position(position=position-1)
-        print(tache)
         task = str(input("Entrer le libelle de la nouvelle tâche:"))
         category = str(input("Entrer la description de la nouvelle tâche:"))
-        typer.echo(f"Mise à jour {position}")
+        
+        user =self.user
 
-        update_tasks(position-1, task, category)
+        
+        if user[6] == 3:   #role d'administrateur
+            typer.echo(f"Validation {position}")
+            update_tasks(position-1, task, category)
+        else:   #Un utilisateur standard
+            taches = get_user_tasks(user[0])
+            Vraiposition = (taches[position - 1])[5]
+            print(Vraiposition)
+            #update_tasks(position-1, task, category)
+            
+
+
+        tache = get_task_by_position(position=position-1)
+        print(tache)
+        
+        typer.echo(f"Mise à jour {position}")
         self.do_show(None)
 
     @app.command(short_help='Completer une tâche')
