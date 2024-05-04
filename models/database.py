@@ -127,3 +127,5 @@ def get_user_tasks(user_id):
     for resultat in tasks:
         taches.append(Todo(*resultat))
     return taches
+
+# Statistique sur les taches d'un utilisateurs

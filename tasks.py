@@ -158,3 +158,25 @@ class TacheCMD(cmd.Cmd):
                 is_done_str ='❌' 
             table.add_row(str(idx),task.task, f"[{c}]{task.category}[/{c}]",is_done_str)
         console.print(table)
+
+    def do_stats(self,arg):
+        """Statistique sur les taches"""
+        user =self.user
+        if user[6] == 3:   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
+            tasks = get_all_tasks()
+        else:   #Chaque utilisateur ne verra que les tâches qu'il a crée
+            tasks = get_user_tasks(user[0])
+
+        console.print("[bold magenta]Statistique[/bold magenta]!","🌍")
+
+        table = Table(show_header=True, header_style="bold blue")
+        table.add_column("Taches Terminees", min_width=20)
+        table.add_column("Taches En Cours", min_width=12, justify="right")
+        table.add_column("Taches non debutees", min_width=12, justify="right")
+        table.add_column("Total taches", min_width=12, justify="right")
+
+        finish = [x for x in tasks if x.status == 3]
+        start = [x for x in tasks if x.status == 1]
+        ongoing = [x for x in tasks if x.status == 2]
+        table.add_row(str(len(finish)), str(len(ongoing)),str(len(start)), str(len(tasks)))
+        console.print(table)
