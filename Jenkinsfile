@@ -13,7 +13,8 @@ pipeline {
         }
         stage ("Execution des tests") {
             steps {
-                bat "python -m unittest discover"
+                bat 'C:\\Users\\hp\\anaconda3\\python.exe -m unittest discover'
+"
             }
         }
     }
