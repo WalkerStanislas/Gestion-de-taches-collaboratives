@@ -58,6 +58,8 @@ class TestUser(unittest.TestCase):
         # User().delete(user.user_id)
         # self.assertEqual(User().count(), 2)
         
+        
+        #Ce code est en commentaire
 
 if __name__ == '__main__':
     unittest.main()
