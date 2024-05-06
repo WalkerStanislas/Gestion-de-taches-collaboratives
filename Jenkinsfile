@@ -13,7 +13,7 @@ pipeline {
         }
         stage ("Execution des tests") {
             steps {
-                bat "unittest -v"
+                bat "python3 -m unittest -v"
             }
         }
     }
