@@ -22,3 +22,14 @@ class Auth:
         password = input("Mot de passe : ")
         user = User(username=username, password=password)
         user.save()
+
+    def update(self, username):
+        nom = input("Nom de famille : ")
+        prenom = input("Prenom : ")
+        email = input("Email : ")
+        user = User().get(username)
+        user.nom = nom
+        user.prenom = prenom
+        user.email = email
+        user.update()
+        return user

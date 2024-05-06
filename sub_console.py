@@ -3,6 +3,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 from models.task import Task
+from auth import Auth
 
 console = Console()
 app = typer.Typer()
@@ -44,9 +45,8 @@ class TacheCMD(cmd.Cmd):
             if user.role == 3:   #role d'administrateur
                 taches = Task().get()
             else:
-                taches = Task(user.user_id)
-            print(len(taches))
-            if position < len(taches):
+                taches = Task().get(user.user_id)
+            if position <= len(taches):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 1:
                     typer.echo(f"supression {position}")
@@ -63,6 +63,10 @@ class TacheCMD(cmd.Cmd):
     @app.command(short_help='Modifier une tâche')
     def do_update(self, arg):
         """Mise à jour d'une tâche"""
+        if arg.__eq__('profil'):
+            users = Auth().update(self.user.username)
+            self.user = users
+            return
         try:
             position = int(input("Entrer la position de la tâche sur la table:"))
             user =self.user
@@ -70,7 +74,7 @@ class TacheCMD(cmd.Cmd):
                 taches = Task().get()
             else:
                 taches = Task().get(user.user_id)
-            if type(position) is int and position < len(taches):
+            if type(position) is int and position <= len(taches):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 3:
                     console.print("Tache deja complete rien a modifier")
@@ -182,4 +186,19 @@ class TacheCMD(cmd.Cmd):
         start = [x for x in tasks if x.status == 1]
         ongoing = [x for x in tasks if x.status == 2]
         table.add_row(str(len(finish)), str(len(ongoing)),str(len(start)), str(len(tasks)))
+        console.print(table)
+
+    def do_profils(self, arg):
+        """Permet a l'utilisateur de voir sont profiles"""
+        console.print("[bold magenta]Profile de l'utilisateur[/bold magenta]!","🌍")
+
+        table = Table(show_header=True, header_style="bold blue")
+        table.add_column("Nom", min_width=20)
+        table.add_column("Prenom", min_width=12, justify="right")
+        table.add_column("Username", min_width=12, justify="right")
+        table.add_column("Email", min_width=12, justify="right")
+        table.add_column("Role", min_width=12, justify="right")
+        user = self.user
+        roles = {1:"Technicien", 2:"Standard", 3:"Admin"}
+        table.add_row(str(user.nom), str(user.prenom), str(user.username), str(user.email), str(roles.get(user.role)))
         console.print(table)
