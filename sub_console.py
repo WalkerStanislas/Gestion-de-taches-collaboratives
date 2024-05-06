@@ -199,6 +199,6 @@ class TacheCMD(cmd.Cmd):
         table.add_column("Email", min_width=12, justify="right")
         table.add_column("Role", min_width=12, justify="right")
         user = self.user
-        roles = {1:"Technicien", 2:"Standard", 3:"Admin"}
+        roles = {1:"Standard", 2:"Technicien", 3:"Admin"}
         table.add_row(str(user.nom), str(user.prenom), str(user.username), str(user.email), str(roles.get(user.role)))
         console.print(table)

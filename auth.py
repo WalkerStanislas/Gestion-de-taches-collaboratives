@@ -6,7 +6,7 @@ class Auth:
     """Une class Auth sans constructeur"""
     def login_user(self):
         """Permet a un utilisateur de se connecter"""
-        username = input("Nom d'utilisateur : ")
+        username = input("Nom d'utilisateur ou adresse email : ")
         password = input("Mot de passe : ")
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = User().get(username)

@@ -4,7 +4,8 @@ import hashlib
 
 class User:
     """Definition de la classe User"""
-    def __init__(self, user_id=None,nom=None,prenom=None, username=None,email=None, password=None, role=1):
+    def __init__(self, user_id=None,nom=None,prenom=None,
+                 username=None,email=None, password=None, role=1):
         """Constructeur de la classe user"""
         self.user_id = user_id
         self.nom = nom
@@ -16,6 +17,8 @@ class User:
         
     def save(self):
         """Cette method permet d'inserer un utilisateur"""
+        if self.get(self.username) is not None:
+            return None
         password = hashlib.sha256(self.password.encode()).hexdigest()
         cursor.execute("INSERT INTO users (nomUser, passe, role) VALUES (?, ?, ?)", (self.username, password, self.role))
         conn.commit()
@@ -27,6 +30,8 @@ class User:
 
     def update(self):
         """Mise a jour du nom et prenom de l'utilisateur"""
+        if self.get(self.email) is not None:
+            return None
         cursor.execute("UPDATE users SET nom = :nom, prenom = :prenom, email = :email WHERE nomUser = :username",
                        {'nom':self.nom,'prenom':self.prenom, 'email':self.email, 'username':self.username})
         conn.commit()
@@ -54,7 +59,7 @@ class User:
         results = self.all()
         if username is not None:
             for result in results:
-                if result.username.__eq__(username):
+                if result.username.__eq__(username) or result.email.__eq__(username):
                     return result
             return None
         return results
