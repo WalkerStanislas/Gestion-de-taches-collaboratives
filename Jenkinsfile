@@ -11,5 +11,10 @@ pipeline {
                 bat "python -m pip install -r requirements.txt"
             }
         }
+        stage ("Execution des tests") {
+            steps {
+                bat "python -m unittest -v"
+            }
+        }
     }
 }
