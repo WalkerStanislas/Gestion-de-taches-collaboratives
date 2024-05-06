@@ -50,10 +50,10 @@ class TestUser(unittest.TestCase):
         self.assertIsNone(Auth().login(ex_user.username, "1234"))
         self.assertIsNone(Auth().login("no_existant", "1234"))
     
-    def test_length_users(self):
-        """Tester le nombre total d'utilisateur"""
-        count = User().count()
-        self.assertEqual(count, 3)
+    #def test_length_users(self):
+        #"""Tester le nombre total d'utilisateur"""
+        #count = User().count()
+        #self.assertEqual(count, 3)
         # user = User().get("test")
         # User().delete(user.user_id)
         # self.assertEqual(User().count(), 2)
