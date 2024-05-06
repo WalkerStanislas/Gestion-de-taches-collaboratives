@@ -59,7 +59,7 @@ class User:
         results = self.all()
         if username is not None:
             for result in results:
-                if result.username.__eq__(username) or result.email.__eq__(username):
+                if result.username == username or result.email == username:
                     return result
             return None
         return results

@@ -72,9 +72,11 @@ class Task:
             results = [result for result in results if result.id_User.__eq__(user_id)]
         return results
 
-    def count(self):
+    def count(self, user_id=None):
         """Permet de compter le nombre d'utilisateur"""
         tasks = self.all()
+        if user_id is not None:
+            tasks = [task for task in tasks if task.id_User == user_id]
         return len(tasks)
 
     def complete_task(self):

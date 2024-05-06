@@ -8,12 +8,18 @@ class Auth:
         """Permet a un utilisateur de se connecter"""
         username = input("Nom d'utilisateur ou adresse email : ")
         password = input("Mot de passe : ")
+        user = self.login(username, password)
+        if user is None:
+            print("Identifiants incorrects")
+        return user
+    
+    def login(self, username, password):
+        """Permet a un utilisateur de se connecter"""
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = User().get(username)
-        if user and user.password.__eq__(hashed_password):
+        if user is not None and user.password.__eq__(hashed_password):
             return user
         else:
-            print("Identifiants incorrects.")
             return None
 
 

@@ -4,6 +4,7 @@ Contains the TestPlaceDocs classes
 """
 import unittest
 from models.user import User
+from auth import Auth
 import hashlib
 import os
 
@@ -25,7 +26,7 @@ class TestUser(unittest.TestCase):
         self.assertEqual(user.role, 1)
 
     def test_insert_user(self):
-        """Tester si un utilisateur est sauvegerder dans la base de donnee"""
+        """Tester si un utilisateur est sauvegarde dans la base de donnee"""
         user_inst = User(username="test", password="test123")
         user_inst.save()
         user = User().get(username=user_inst.username)
@@ -41,7 +42,22 @@ class TestUser(unittest.TestCase):
         user = User().get(username=ex_user.username)
         self.assertIsNotNone(user)
         self.assertEqual(hashlib.sha256(ex_user.password.encode()).hexdigest(), user.password)
-
+    
+    def test_wrong_credentials(self):
+        """Tester un utilisateur existant avec un mot de passe incorrect"""
+        ex_user = User(username="test", password="test123")
+        self.assertIsNotNone(Auth().login(ex_user.username, ex_user.password))
+        self.assertIsNone(Auth().login(ex_user.username, "1234"))
+        self.assertIsNone(Auth().login("no_existant", "1234"))
+    
+    def test_length_users(self):
+        """Tester le nombre total d'utilisateur"""
+        count = User().count()
+        self.assertEqual(count, 3)
+        # user = User().get("test")
+        # User().delete(user.user_id)
+        # self.assertEqual(User().count(), 2)
+        
 
 if __name__ == '__main__':
     unittest.main()
