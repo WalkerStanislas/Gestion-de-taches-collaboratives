@@ -14,7 +14,6 @@ pipeline {
         stage ("Execution des tests") {
             steps {
                 bat 'C:\\Users\\hp\\anaconda3\\python.exe -m unittest discover'
-"
             }
         }
     }
