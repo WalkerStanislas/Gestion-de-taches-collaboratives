@@ -81,6 +81,7 @@ class TacheCMD(cmd.Cmd):
             position = int(input("Entrer la position " +
                                  "de la tâche sur la table:"))
             user = self.user
+            self.do_show(None)
             if user.role == 3:
                 taches = Task().get()
             else:
@@ -112,10 +113,12 @@ class TacheCMD(cmd.Cmd):
         """Completer une tâche"""
         user = self.user
         if user.role == 3:
+            self.do_show(None)
+            tasks= Task().get()
             position = int(input("Entrer la position " +
                                  "de la tâche sur la table:"))
             typer.echo(f"Validation {position}")
-            task = Task().get(position-1)
+            task = tasks[position - 1]
             task.complete_task()
             self.do_show(None)
         else:
@@ -126,6 +129,7 @@ class TacheCMD(cmd.Cmd):
     def do_assign_task(self, arg):
         """Assignation d'une tache"""
         try:
+            self.do_show(None)
             user = self.user
             if user.role == 3:
                 taches = Task().get()
@@ -135,7 +139,7 @@ class TacheCMD(cmd.Cmd):
                 return
             position = int(input("Entrer la position de la " +
                                  "tâche sur la table:"))
-            if position < len(taches):
+            if position <= len(taches):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 1:
                     typer.echo(f"Assignation {position}")

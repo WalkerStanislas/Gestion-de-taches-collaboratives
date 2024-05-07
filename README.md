@@ -45,10 +45,12 @@ Ceci constitue quelques resultats d'exécution.
 2. Ajout de task et mise a jour
 ![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
 3. Suppression et affichage de la liste des taches
-![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+![delete and show](res/show_delete.png "Delete and show")
 4. Affichage profile utilisateur et mise a jour de son profile
-![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+![show profile](res/profils_update.png "Voir profile")
 5. Assigner une tache
-![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+![assign task](res/complete_statistique.png "assigner une tache")
 6. Completer un task
-![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+![complete task](res/complete_statistique.png "Completer une tache")
+7. Test unitaire
+![Unittest](res/unittests.png "Test Unitaire")
