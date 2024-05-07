@@ -2,6 +2,7 @@ import hashlib
 from models.user import User
 """Importation des dependances necessaires"""
 
+
 class Auth:
     """Une class Auth sans constructeur"""
     def login_user(self):
@@ -12,7 +13,7 @@ class Auth:
         if user is None:
             print("Identifiants incorrects")
         return user
-    
+
     def login(self, username, password):
         """Permet a un utilisateur de se connecter"""
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
@@ -21,7 +22,6 @@ class Auth:
             return user
         else:
             return None
-
 
     def inscription(self):
         username = input("Nom d'utilisateur : ")
