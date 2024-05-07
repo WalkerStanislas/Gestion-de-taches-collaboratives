@@ -36,8 +36,8 @@ class GTCCommand(cmd.Cmd):
         user = None
         while user is None:
             user = Auth().login_user()
-        typer.echo(f"Vous êtes maintenant connecté en tant que: \
-                   {user.username}")
+        typer.echo("Vous êtes maintenant connecté en tant que: " +
+                   f"{user.username}")
         TacheCMD(user).cmdloop()
 
 

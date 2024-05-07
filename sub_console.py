@@ -43,8 +43,9 @@ class TacheCMD(cmd.Cmd):
     def do_delete(self, arg):
         """Suppression"""
         try:
-            position = int(input("Entrer la position de la \
-                                 tâche sur la table:"))
+            self.do_show(None)
+            position = int(input("Entrer la position de la " +
+                                 "tâche sur la table:"))
             user = self.user
             if user.role == 3:
                 taches = Task().get()
@@ -61,11 +62,11 @@ class TacheCMD(cmd.Cmd):
                     tache_cur.delete()
                     self.do_show(None)
                 else:
-                    console.print("🚨", "[bold red]Tache deja\
-                                  debuter impossible de supprimer")
+                    console.print("🚨", "[bold red]Tache deja" +
+                                  "debuter impossible de supprimer")
             else:
-                console.print("🚨", "[bold red]Aucune tache ne\
-                              correspond a cette position")
+                console.print("🚨", "[bold red]Aucune tache ne " +
+                              "correspond a cette position")
         except Exception:
             console.print("🚨", "[bold red]Entrez un entier")
 
@@ -77,8 +78,9 @@ class TacheCMD(cmd.Cmd):
             self.user = users
             return
         try:
-            position = int(input("Entrer la position\
-                                 de la tâche sur la table:"))
+            self.do_show(None)
+            position = int(input("Entrer la position " +
+                                 "de la tâche sur la table:"))
             user = self.user
             if user.role == 3:
                 taches = Task().get()
@@ -89,19 +91,20 @@ class TacheCMD(cmd.Cmd):
                 if tache_cur.status == 3:
                     console.print("Tache deja complete rien a modifier")
                 else:
-                    task = str(input("Entrer le libelle\
-                                     de la nouvelle tâche:"))
-                    category = str(input("Entrer la description\
-                                         de la nouvelle tâche:"))
-                    tache_cur.task = task
-                    tache_cur.category = category
+                    task = str(input("Entrer le libelle " +
+                                     "de la nouvelle tâche:"))
+                    category = str(input("Entrer la description " +
+                                         "de la nouvelle tâche:"))
+                    tache_cur.task = task if task != "" else tache_cur.task
+                    tache_cur.category = category if category != "" else\
+                        tache_cur.category
                     tache_cur.update()
                     typer.echo(f"Mise à jour {position}")
                     self.do_show(None)
 
             else:
-                console.print("🚨", "[bold red]Aucune tache\
-                              ne correspond a cette position")
+                console.print("🚨", "[bold red]Aucune tache " +
+                              "ne correspond a cette position")
         except Exception:
             console.print("🚨", "[bold red]Entrez un entier")
 
@@ -110,15 +113,15 @@ class TacheCMD(cmd.Cmd):
         """Completer une tâche"""
         user = self.user
         if user.role == 3:
-            position = int(input("Entrer la position\
-                                 de la tâche sur la table:"))
+            position = int(input("Entrer la position " +
+                                 "de la tâche sur la table:"))
             typer.echo(f"Validation {position}")
             task = Task().get(position-1)
             task.complete_task()
             self.do_show(None)
         else:
-            console.print("🚨", "[bold red]Vous n'êtes pas\
-                          autoriser à éffectuer cette opération")
+            console.print("🚨", "[bold red]Vous n'êtes pas " +
+                          "autoriser à éffectuer cette opération")
 
     @app.command(short_help='Assigner une tâche')
     def do_assign_task(self, arg):
@@ -128,11 +131,11 @@ class TacheCMD(cmd.Cmd):
             if user.role == 3:
                 taches = Task().get()
             else:
-                console.print("🚨", "[bold red]Vous n'etes pas\
-                              autorise a faire cette operation")
+                console.print("🚨", "[bold red]Vous n'etes pas " +
+                              "autorise a faire cette operation")
                 return
-            position = int(input("Entrer la position de la\
-                                 tâche sur la table:"))
+            position = int(input("Entrer la position de la " +
+                                 "tâche sur la table:"))
             if position < len(taches):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 1:
@@ -140,11 +143,11 @@ class TacheCMD(cmd.Cmd):
                     tache_cur.assign_tasks()
                     self.do_show(None)
                 else:
-                    console.print("🚨", "[bold red]Tache\
-                                  deja debuter impossible")
+                    console.print("🚨", "[bold red]Tache " +
+                                  "deja debuter impossible")
             else:
-                console.print("🚨", "[bold red]Aucune tache ne\
-                              correspond a cette position")
+                console.print("🚨", "[bold red]Aucune tache ne " +
+                              "correspond a cette position")
         except Exception:
             console.print("🚨", "[bold red]Entrez un entier")
 
