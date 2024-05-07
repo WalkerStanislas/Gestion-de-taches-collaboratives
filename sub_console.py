@@ -4,12 +4,15 @@ from rich.console import Console
 from rich.table import Table
 from models.task import Task
 from auth import Auth
-
+"""Importation des modules"""
 console = Console()
 app = typer.Typer()
 
+
 class TacheCMD(cmd.Cmd):
+    """Documentation de la classe"""
     def __init__(self, user):
+        """Definition du constructeur"""
         super().__init__()
         self.user = user
         self.prompt = f"({self.user.username}) "
@@ -25,13 +28,13 @@ class TacheCMD(cmd.Cmd):
     def do_quit(self, arg):
         """Quit la console avec la commande quit"""
         return True
-    
+
     @app.command(short_help='Ajouter une tâche')
     def do_add(self, arg):
         """Ajout tache"""
         task = input("Entrez le titre de la tâche:")
         category = input("Entrez la description de la tâche:")
-        typer.echo(f"ajout de la tâche {task}, {category}") 
+        typer.echo(f"ajout de la tâche {task}, {category}")
         task = Task(task=task, category=category, id_User=self.user.user_id)
         task.save()
         self.do_show(None)
@@ -40,9 +43,10 @@ class TacheCMD(cmd.Cmd):
     def do_delete(self, arg):
         """Suppression"""
         try:
-            position = int(input("Entrer la position de la tâche sur la table:"))
-            user =self.user
-            if user.role == 3:   #role d'administrateur
+            position = int(input("Entrer la position de la \
+                                 tâche sur la table:"))
+            user = self.user
+            if user.role == 3:
                 taches = Task().get()
             else:
                 taches = Task().get(user.user_id)
@@ -50,15 +54,20 @@ class TacheCMD(cmd.Cmd):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 1:
                     typer.echo(f"supression {position}")
-                    tache_cur.position = tache_cur.position # Position commence à 1 mais la base de données, elle commence à 0
+                    tache_cur.position = tache_cur.position
+                    """Position commence à 1 mais la base de
+                    données, elle commence à 0
+                    """
                     tache_cur.delete()
                     self.do_show(None)
                 else:
-                    console.print("🚨","[bold red]Tache deja debuter impossible de supprimer")
+                    console.print("🚨", "[bold red]Tache deja\
+                                  debuter impossible de supprimer")
             else:
-                console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+                console.print("🚨", "[bold red]Aucune tache ne\
+                              correspond a cette position")
         except Exception:
-            console.print("🚨","[bold red]Entrez un entier")
+            console.print("🚨", "[bold red]Entrez un entier")
 
     @app.command(short_help='Modifier une tâche')
     def do_update(self, arg):
@@ -68,9 +77,10 @@ class TacheCMD(cmd.Cmd):
             self.user = users
             return
         try:
-            position = int(input("Entrer la position de la tâche sur la table:"))
-            user =self.user
-            if user.role == 3:   #role d'administrateur
+            position = int(input("Entrer la position\
+                                 de la tâche sur la table:"))
+            user = self.user
+            if user.role == 3:
                 taches = Task().get()
             else:
                 taches = Task().get(user.user_id)
@@ -79,8 +89,10 @@ class TacheCMD(cmd.Cmd):
                 if tache_cur.status == 3:
                     console.print("Tache deja complete rien a modifier")
                 else:
-                    task = str(input("Entrer le libelle de la nouvelle tâche:"))
-                    category = str(input("Entrer la description de la nouvelle tâche:"))
+                    task = str(input("Entrer le libelle\
+                                     de la nouvelle tâche:"))
+                    category = str(input("Entrer la description\
+                                         de la nouvelle tâche:"))
                     tache_cur.task = task
                     tache_cur.category = category
                     tache_cur.update()
@@ -88,36 +100,39 @@ class TacheCMD(cmd.Cmd):
                     self.do_show(None)
 
             else:
-                console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+                console.print("🚨", "[bold red]Aucune tache\
+                              ne correspond a cette position")
         except Exception:
-            console.print("🚨","[bold red]Entrez un entier")
+            console.print("🚨", "[bold red]Entrez un entier")
 
     @app.command(short_help='Completer une tache')
     def do_complete(self, arg):
         """Completer une tâche"""
-        user =self.user
-        if user.role == 3:   #role d'administrateur égale à 3. Il a la possibilité de completer les tâches
-            position = int(input("Entrer la position de la tâche sur la table:"))
+        user = self.user
+        if user.role == 3:
+            position = int(input("Entrer la position\
+                                 de la tâche sur la table:"))
             typer.echo(f"Validation {position}")
             task = Task().get(position-1)
             task.complete_task()
             self.do_show(None)
-        else:   #Un utilisateur standard ne peut completer une tâche lui même
-            console.print("🚨","[bold red]Vous n'êtes pas autoriser à éffectuer cette opération")
-
-        
+        else:
+            console.print("🚨", "[bold red]Vous n'êtes pas\
+                          autoriser à éffectuer cette opération")
 
     @app.command(short_help='Assigner une tâche')
     def do_assign_task(self, arg):
         """Assignation d'une tache"""
         try:
-            user =self.user
-            if user.role == 3:   #role d'administrateur
+            user = self.user
+            if user.role == 3:
                 taches = Task().get()
             else:
-                console.print("🚨","[bold red]Vous n'etes pas autorise a faire cette operation")
+                console.print("🚨", "[bold red]Vous n'etes pas\
+                              autorise a faire cette operation")
                 return
-            position = int(input("Entrer la position de la tâche sur la table:"))
+            position = int(input("Entrer la position de la\
+                                 tâche sur la table:"))
             if position < len(taches):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 1:
@@ -125,24 +140,23 @@ class TacheCMD(cmd.Cmd):
                     tache_cur.assign_tasks()
                     self.do_show(None)
                 else:
-                    console.print("🚨","[bold red]Tache deja debuter impossible")
+                    console.print("🚨", "[bold red]Tache\
+                                  deja debuter impossible")
             else:
-                console.print("🚨","[bold red]Aucune tache ne correspond a cette position")
+                console.print("🚨", "[bold red]Aucune tache ne\
+                              correspond a cette position")
         except Exception:
-            console.print("🚨","[bold red]Entrez un entier")
+            console.print("🚨", "[bold red]Entrez un entier")
 
     @app.command(short_help='Affichage')
     def do_show(self, arg):
         """Affichage"""
-        user =self.user
-
-        if user.role == 3:   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
+        user = self.user
+        if user.role == 3:
             tasks = Task().get()
-        else:   #Chaque utilisateur ne verra que les tâches qu'il a crée
+        else:
             tasks = Task().get(user.user_id)
-
-        console.print("[bold magenta]Todos[/bold magenta]!","🌍")
-
+        console.print("[bold magenta]Todos[/bold magenta]!", "🌍")
         table = Table(show_header=True, header_style="bold blue")
         table.add_column("#", style="dim", width=6)
         table.add_column("Tache", min_width=20)
@@ -150,31 +164,32 @@ class TacheCMD(cmd.Cmd):
         table.add_column("Etat", min_width=12, justify="right")
 
         def get_category_color(category):
-            COLORS = {'Learn': 'cyan', 'YouTube': 'red', 'Installation réseau': 'cyan' ,'Sports': 'green'}
-            if  category in COLORS:
+            COLORS = {'Learn': 'cyan', 'YouTube': 'red',
+                      'Installation réseau': 'cyan', 'Sports': 'green'}
+            if category in COLORS:
                 return COLORS[category]
             return 'white'
 
-        for idx, task in enumerate(tasks,start=1):
-            c= get_category_color(task.category)
+        for idx, task in enumerate(tasks, start=1):
+            c = get_category_color(task.category)
             if task.status == 2:
                 is_done_str = '⏳'
             elif task.status == 3:
-                is_done_str ='✔️'
+                is_done_str = '✔️'
             else:
-                is_done_str ='❌' 
-            table.add_row(str(idx),task.task, f"[{c}]{task.category}[/{c}]",is_done_str)
+                is_done_str = '❌'
+            table.add_row(str(idx), task.task,
+                          f"[{c}]{task.category}[/{c}]", is_done_str)
         console.print(table)
 
-    def do_stats(self,arg):
+    def do_stats(self, arg):
         """Statistique sur les taches"""
-        user =self.user
-        if user.role == 3:   #role d'administrateur égale à 3. Il a la possibilité de voir toutes les tâches
+        user = self.user
+        if user.role == 3:
             tasks = Task().get()
-        else:   #Chaque utilisateur ne verra que les tâches qu'il a crée
+        else:
             tasks = Task().get(user.user_id)
-
-        console.print("[bold magenta]Statistique[/bold magenta]!","🌍")
+        console.print("[bold magenta]Statistique[/bold magenta]!", "🌍")
 
         table = Table(show_header=True, header_style="bold blue")
         table.add_column("Taches Terminees", min_width=20)
@@ -185,13 +200,13 @@ class TacheCMD(cmd.Cmd):
         finish = [x for x in tasks if x.status == 3]
         start = [x for x in tasks if x.status == 1]
         ongoing = [x for x in tasks if x.status == 2]
-        table.add_row(str(len(finish)), str(len(ongoing)),str(len(start)), str(len(tasks)))
+        table.add_row(str(len(finish)), str(len(ongoing)),
+                      str(len(start)), str(len(tasks)))
         console.print(table)
 
     def do_profils(self, arg):
         """Permet a l'utilisateur de voir sont profiles"""
-        console.print("[bold magenta]Profile de l'utilisateur[/bold magenta]!","🌍")
-
+        console.print("[bold magenta]Profile[/bold magenta]!", "🌍")
         table = Table(show_header=True, header_style="bold blue")
         table.add_column("Nom", min_width=20)
         table.add_column("Prenom", min_width=12, justify="right")
@@ -199,6 +214,8 @@ class TacheCMD(cmd.Cmd):
         table.add_column("Email", min_width=12, justify="right")
         table.add_column("Role", min_width=12, justify="right")
         user = self.user
-        roles = {1:"Standard", 2:"Technicien", 3:"Admin"}
-        table.add_row(str(user.nom), str(user.prenom), str(user.username), str(user.email), str(roles.get(user.role)))
+        roles = {1: "Standard", 2: "Technicien", 3: "Admin"}
+        table.add_row(str(user.nom), str(user.prenom),
+                      str(user.username), str(user.email),
+                      str(roles.get(user.role)))
         console.print(table)
