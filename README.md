@@ -38,7 +38,7 @@ Ensuite on à un package `tests` contenant les fichiers suivants:
 Pour executer le présent projet, il suffit de ce placé dans la racine du projet et executer la commande ``python console.py`` pour lancer la console principale.
 ---
 Les testes unitaires peuvent aussi être exécuter avec la commande `python -m unittest -v`.
-### Resultats
+## Resultats
 Ceci constitue quelques resultats d'exécution.
 1. Inscription et Connexion
 ![Inscription et connexion](res/signin_login.png "Inscription")
