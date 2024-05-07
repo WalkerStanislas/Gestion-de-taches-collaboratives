@@ -69,7 +69,7 @@ class TestTask(unittest.TestCase):
             self.assertEqual(task2.category, task2_up.category)
 
     def test_add_task(self):
-        """Permettre l'ajout d'une nouvelle task"""
+        """Permettre l'ajout d'une nouvelle tache"""
         user1 = self.user1
         user2 = self.user2
         task1 = Task(task="Maintenance", category="Mise a jour des logiciel",

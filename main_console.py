@@ -13,7 +13,7 @@ class GTCCommand(cmd.Cmd):
     prompt = '(base) '
 
     def do_EOF(self, arg):
-        """Exits console"""
+        """Quitter la console"""
         return True
 
     def emptyline(self):
@@ -21,7 +21,7 @@ class GTCCommand(cmd.Cmd):
         return False
 
     def do_quit(self, arg):
-        """Quit command to exit the program"""
+        """Quitter le programme"""
         return True
 
     @app.command(short_help='Inscrivez-vous')
