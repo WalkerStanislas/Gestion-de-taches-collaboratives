@@ -1,6 +1,6 @@
 import sqlite3
 """Importation des dependances"""
-conn = sqlite3.connect('GestionTaches.db')
+conn = sqlite3.connect('GestionTaches.sqlite3')
 cursor = conn.cursor()
 
 

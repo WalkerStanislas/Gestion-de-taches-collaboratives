@@ -18,7 +18,7 @@ class Auth:
         """Permet a un utilisateur de se connecter"""
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
         user = User().get(username)
-        if user is not None and user.password.__eq__(hashed_password):
+        if user is not None and user.password == hashed_password:
             return user
         else:
             return None

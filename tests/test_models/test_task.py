@@ -2,9 +2,7 @@ import unittest
 from models.task import Task
 from models.user import User
 import os
-from models import drop_all_tables
-from models import create_userTable
-from models import drop_all_tables
+
 
 class TestTask(unittest.TestCase):
     """"""
@@ -33,11 +31,17 @@ class TestTask(unittest.TestCase):
         self.assertEqual(task.task, "Home-Work")
         self.assertEqual(task.category, "Faire les devoir de maison")
 
-    def test_user2_role(self):
+    def test_user1_role(self):
         """Tester si l'utilisateur 2 est administrateur"""
         usr = self.user1
+        user1 = User().get(usr.username)
+        self.assertEqual(user1.role, 3)
+
+    def test_user2_role(self):
+        """Tester si l'utilisateur 2 est administrateur"""
+        usr = self.user2
         user2 = User().get(usr.username)
-        self.assertEqual(user2.role, 3)
+        self.assertEqual(user2.role, 1)
 
     def test_update_task(self):
         """Tester la modification d'un task"""
@@ -64,19 +68,6 @@ class TestTask(unittest.TestCase):
             self.assertEqual(task2.task, task2_up.task)
             self.assertEqual(task2.category, task2_up.category)
 
-    def test_assign_task(self):
-        """Tester qu'un administrateur a assigner une tache"""
-        user1 = User().get(self.user1.username)
-        tasks_user1 = Task().get(user1.user_id)
-        if len(tasks_user1) > 0:
-            task1 = tasks_user1[0]
-            task2 = tasks_user1[1]
-            t1 = task1.assign_tasks()
-            t2 = task2.assign_tasks()
-            self.assertEqual(t1.status, 2)
-            self.assertEqual(t2.status, 2)
-
-
     def test_add_task(self):
         """Permettre l'ajout d'une nouvelle task"""
         user1 = self.user1
@@ -99,3 +90,30 @@ class TestTask(unittest.TestCase):
         self.assertEqual(t11.status, 1)
         self.assertEqual(Task().count(user1.user_id), 2)
         self.assertEqual(Task().count(user2.user_id), 2)
+
+    def test_assign_task(self):
+        """Tester qu'un administrateur a assigner une tache"""
+        user1 = User().get(self.user1.username)
+        tasks_user1 = Task().get(user1.user_id)
+        if len(tasks_user1) > 0:
+            task1 = tasks_user1[0]
+            task2 = tasks_user1[1]
+            t1 = task1.assign_tasks()
+            t2 = task2.assign_tasks()
+            self.assertEqual(t1.status, 2)
+            self.assertEqual(t2.status, 2)
+        tasks = Task().get()
+        for task in tasks:
+            t = task.assign_tasks()
+            if t:
+                self.assertEqual(t.status, 2)
+
+    def test_complete_task(self):
+        """Completer une tache"""
+        tasks_user1 = Task().get()
+        for task in tasks_user1:
+            t = task.complete_task()
+            self.assertEqual(t.status, 3)
+        for task in Task().get():
+            t = task.complete_task()
+            self.assertIsNone(t)
