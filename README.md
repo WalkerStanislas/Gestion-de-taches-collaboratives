@@ -40,3 +40,15 @@ Pour executer le présent projet, il suffit de ce placé dans la racine du proje
 Les testes unitaires peuvent aussi être exécuter avec la commande `python -m unittest -v`.
 ### Resultats
 Ceci constitue quelques resultats d'exécution.
+1. Inscription et Connexion
+![Inscription et connexion](res/signin_login.png "Inscription")
+2. Ajout de task et mise a jour
+![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+3. Suppression et affichage de la liste des taches
+![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+4. Affichage profile utilisateur et mise a jour de son profile
+![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+5. Assigner une tache
+![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")
+6. Completer un task
+![Ajout et mise a jour](res/add_update.png "Ajout et mise a jour")

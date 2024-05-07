@@ -55,7 +55,6 @@ class TacheCMD(cmd.Cmd):
                 tache_cur = taches[position - 1]
                 if tache_cur.status == 1:
                     typer.echo(f"supression {position}")
-                    tache_cur.position = tache_cur.position
                     """Position commence à 1 mais la base de
                     données, elle commence à 0
                     """
