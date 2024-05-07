@@ -25,7 +25,7 @@ class TacheCMD(cmd.Cmd):
         """Ne rien faire si aucune commande n'est rentre """
         return False
 
-    def do_quit(self, arg):
+    def do_logout(self, arg):
         """Quit la console avec la commande quit"""
         return True
 
