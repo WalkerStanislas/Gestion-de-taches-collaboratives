@@ -25,7 +25,7 @@ class GTCCommand(cmd.Cmd):
         return True
 
     @app.command(short_help='Inscrivez-vous')
-    def do_sigin(self, arg):
+    def do_signin(self, arg):
         """Inscrivez-vous"""
         Auth().inscription()
         typer.echo("Inscription réussie")

@@ -40,7 +40,7 @@ def drop_all_tables():
     conn.commit()
 
 def create_admin_user():
-    password = hashlib.sha256("admin").hexdigest()
+    password = hashlib.sha256("admin".encode()).hexdigest()
     cursor.execute("INSERT INTO users (nomUser, passe, role) \
                    VALUES (?, ?, ?);",
                    ("admin", password, 3))
