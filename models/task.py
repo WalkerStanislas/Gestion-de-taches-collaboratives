@@ -39,6 +39,7 @@ class Task:
                             'date_completed': self.date_completed,
                             'status': self.status, 'position': self.position,
                             'user_id': self.id_User})
+            return self.get_task_with_position(self.position)
 
     def change_position(old_position: int, new_position: int, commit=True):
         """Changement de la position d'une tache apres insertion"""
@@ -95,8 +96,19 @@ class Task:
             tasks = [task for task in tasks if task.id_User == user_id]
         return len(tasks)
 
+    def get_task_with_position(self, pos):
+        """Recuperer une taches a partir de sa position"""
+        tasks = self.all()
+        for task in tasks:
+            if task.position == pos:
+                return task
+        return None
+
     def complete_task(self):
         with conn:
+            task = self.get_task_with_position(self.position)
+            if task.status == 3:
+                return None
             cursor.execute("UPDATE taches SET status = 3, \
                            date_completed = :date_completed WHERE \
                            position = :position",
@@ -104,12 +116,16 @@ class Task:
                             'date_completed':
                             datetime.datetime.now().isoformat()
                             })
+            return self.get_task_with_position(self.position)
 
     def assign_tasks(self):
         """Permet d'assigner une tache un utilisateur
         et de marquer la tache comme debuter
         """
         with conn:
+            task = self.get_task_with_position(self.position)
+            if (task.status != 1):
+                return None
             cursor.execute("UPDATE taches SET status = 2, \
                            date_completed = :date_completed WHERE \
                            position = :position",
@@ -117,3 +133,4 @@ class Task:
                             'date_completed':
                             datetime.datetime.now().isoformat()
                             })
+            return self.get_task_with_position(self.position)
