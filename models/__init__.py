@@ -1,4 +1,5 @@
 import sqlite3
+import hashlib
 """Importation des dependances"""
 conn = sqlite3.connect('GestionTaches.sqlite3')
 cursor = conn.cursor()
@@ -38,6 +39,14 @@ def drop_all_tables():
         cursor.execute(f"DROP TABLE IF EXISTS {table[0]};")
     conn.commit()
 
+def create_admin_user():
+    password = hashlib.sha256("admin").hexdigest()
+    cursor.execute("INSERT INTO users (nomUser, passe, role) \
+                   VALUES (?, ?, ?);",
+                   ("admin", password, 3))
+    conn.commit()
+
 drop_all_tables()
 create_userTable()
 create_task_table()
+create_admin_user()
