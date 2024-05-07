@@ -32,6 +32,7 @@ def create_task_table():
         FOREIGN KEY (user_id) REFERENCES users(user_id)
         )""")
 
+
 def drop_all_tables():
     cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
     tables = cursor.fetchall()
@@ -39,12 +40,14 @@ def drop_all_tables():
         cursor.execute(f"DROP TABLE IF EXISTS {table[0]};")
     conn.commit()
 
+
 def create_admin_user():
     password = hashlib.sha256("admin".encode()).hexdigest()
     cursor.execute("INSERT INTO users (nomUser, passe, role) \
                    VALUES (?, ?, ?);",
                    ("admin", password, 3))
     conn.commit()
+
 
 drop_all_tables()
 create_userTable()
