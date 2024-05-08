@@ -56,5 +56,4 @@ Ceci constitue quelques resultats d'exécution.
 9. Test unitaire
 ![Unittest](res/unittests.png "Test Unitaire")
 10. Demo
-https://github.com/WalkerStanislas/Gestion-de-taches-collaboratives/assets/87091389/d687b03b-6a21-4ed0-98cd-b7dbabfc72b9
-
+[Video demo](https://youtu.be/YknXutXMa40 "Video demo")
