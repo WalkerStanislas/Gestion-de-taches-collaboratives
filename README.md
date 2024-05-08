@@ -51,7 +51,9 @@ Ceci constitue quelques resultats d'exécution.
 ![show profile](res/profils_update.png "Voir profile")
 5. Assigner une tache
 ![assign task](res/complete_statistique.png "assigner une tache")
-6. Completer une tache
+8. Completer une tache
 ![complete task](res/complete_statistique.png "Completer une tache")
-7. Test unitaire
+9. Test unitaire
 ![Unittest](res/unittests.png "Test Unitaire")
+10. Demo
+![Demo](https://youtu.be/YknXutXMa40 "Video Demo d'execution")
